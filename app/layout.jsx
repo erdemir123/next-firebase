@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { store } from "../features/store";
 import { ToastContainer } from "react-toastify";
+import "./global.css"
 
 
 export default function RootLayout({ children }) {
@@ -16,12 +17,15 @@ export default function RootLayout({ children }) {
       <body>
         <Provider store={store}>
           {noAuthRequired.includes(router.pathname) ? (
-            { children }
+            <div>{children}</div>
           ) : (
-            <ProtectedRoute>{children}</ProtectedRoute>
+            <ProtectedRoute><div>{children}</div></ProtectedRoute>
           )}
         </Provider>
+        <div>
         <ToastContainer />
+        </div>
+        
       </body>
     </html>
   );

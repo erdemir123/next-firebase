@@ -11,10 +11,13 @@ const ProtectedRoute = ({ children }) => {
     const dispatch = useDispatch();
     useEffect(() => {
       userObserver(dispatch)
-      if(!user?.email){
+      if(user?.email){
+        router.push('/')
+      }
+      else{
         router.push('/login')
       }
-    }, [user?.email,router]);
+    }, [user,router]);
   return (
     <>{children}</>
   )

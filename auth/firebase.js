@@ -73,6 +73,7 @@ export const userObserver = (dispatch) => {
           );
     }
   });
+  
 };
 export const logOut = (navigate, dispatch) => {
   signOut(auth);
@@ -89,7 +90,7 @@ export const signIn = async (email, password, navigate) => {
     toastErrorNotify(error.message);
   }
 };
-export const signUpProvider = (navigate, dispatch) => {
+export const signUpProvider = (router,dispatch) => {
   //? Google ile giriş yapılması için kullanılan firebase metodu
   const provider = new GoogleAuthProvider();
   //? Açılır pencere ile giriş yapılması için kullanılan firebase metodu
@@ -101,7 +102,7 @@ export const signUpProvider = (navigate, dispatch) => {
           email: user.email,
         })
       );
-      navigate("/");
+    router.push("/");
      toastSuccessNotify("Giriş Başarılı...!");
      console.log(user.displayName);
     })
