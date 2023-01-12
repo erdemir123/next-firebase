@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   FacebookAuthProvider
 } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { clearUser, setUser } from "../features/authSlice";
 import {
   toastSuccessNotify,
@@ -30,7 +31,7 @@ const firebase = initializeApp(firebaseConfig);
 export default firebase;
 export const auth = getAuth(firebase);
 export const provider = new GoogleAuthProvider();
-export const createUser = async (email, password, navigate, displayName, dispatch) => {
+export const createUser = async (email, password, router, displayName, dispatch) => {
   try {
     let userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -48,7 +49,7 @@ export const createUser = async (email, password, navigate, displayName, dispatc
         email: email,
       })
     );
-    navigate("/login");
+    router.push("/login");
     toastSuccessNotify("Kayıt Başarılı...!")
   } catch (error) {
     toastErrorNotify(error.message)
@@ -66,7 +67,6 @@ export const userObserver = (dispatch) => {
           email: email,
         })
       );
-      
     } else {
         dispatch(
             clearUser()
@@ -75,16 +75,16 @@ export const userObserver = (dispatch) => {
   });
   
 };
-export const logOut = (navigate, dispatch) => {
+export const logOut = (router, dispatch) => {
   signOut(auth);
   dispatch(clearUser());
   toastWarnNotify("Çıkış Yapıldı..");
-  navigate("/");
+  router.push("/login");
 };
-export const signIn = async (email, password, navigate) => {
+export const signIn = async (email, password, router) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    navigate("/");
+    router.push("/");
     toastSuccessNotify("Giriş Başarılı...!");
   } catch (error) {
     toastErrorNotify(error.message);
@@ -104,7 +104,6 @@ export const signUpProvider = (router,dispatch) => {
       );
     router.push("/");
      toastSuccessNotify("Giriş Başarılı...!");
-     console.log(user.displayName);
     })
     .catch((error) => {
       toastErrorNotify(error.message);

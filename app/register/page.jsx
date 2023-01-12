@@ -1,21 +1,26 @@
-"use client"
+"use client";
 import { FaUser, FaLock } from "react-icons/fa";
-import { FcGoogle} from "react-icons/fc";
 import Link from "next/link";
 import loginImage from "../../helper/images/folhas.jpg";
 import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
+
+import {  useState } from "react";
+import { createUser } from "../../auth/firebase";
 import { useRouter } from "next/navigation";
-import { signUpProvider } from "../../auth/firebase";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 
 export default function pages() {
-  const dispatch = useDispatch()
   const router = useRouter()
-
-  const handleGoogle = (e) => {
-    e.preventDefault()
-    signUpProvider(router,dispatch);
+  const dispatch = useDispatch()
+  const [resUser,setResUser]=useState({email:"",username:"",password:""})
+  
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const displayName = resUser.username;
+    const email = resUser.email;
+    const password = resUser.password;
+    createUser(email, password, router, displayName,dispatch);
   };
   return (
     <>
@@ -32,20 +37,23 @@ export default function pages() {
             {/* Welcome */}
             <div className="flex flex-col items-center">
               <h1 className="font-medium text-green-400 text-xl">
-                Welcome back
+                Welcome 😊
               </h1>
-              <p>Login to your account</p>
+              <p>Register to your account</p>
             </div>
             {/* Inputs */}
-            <form className="flex flex-col items-center space-y-4">
+            <form className="flex flex-col items-center space-y-4" onSubmit={handleRegister}>
               <div className="relative">
                 <span className="absolute flex inset-y-0 items-center pl-4 text-gray-400">
                   <FaUser />
                 </span>
                 <input
                   className="border border-gray-300 outline-none placeholder-gray-400 pl-9 pr-4 py-1 rounded-md transition focus:ring-2 focus:ring-green-300"
-                  placeholder="Username..."
+                  placeholder="username..."
                   type="text"
+                  value={resUser?.username}
+                  onChange={(e)=>setResUser({...resUser,username:e.target.value})}
+
                 />
               </div>
               <div className="relative">
@@ -54,8 +62,24 @@ export default function pages() {
                 </span>
                 <input
                   className="border border-gray-300 outline-none placeholder-gray-400 pl-9 pr-4 py-1 rounded-md transition focus:ring-2 focus:ring-green-300"
-                  placeholder="Password..."
+                  placeholder="email..."
+                  type="email"
+                  value={resUser?.email}
+                  onChange={(e)=>setResUser({...resUser,email:e.target.value})}
+
+                />
+              </div>
+              <div className="relative">
+                <span className="absolute flex inset-y-0 items-center pl-4 text-gray-400">
+                  <FaLock />
+                </span>
+                <input
+                  className="border border-gray-300 outline-none placeholder-gray-400 pl-9 pr-4 py-1 rounded-md transition focus:ring-2 focus:ring-green-300"
+                  placeholder="password..."
                   type="password"
+                  value={resUser?.password}
+                  onChange={(e)=>setResUser({...resUser,password:e.target.value})}
+
                 />
               </div>
               <button
@@ -63,31 +87,17 @@ export default function pages() {
                 type="submit"
               >
                 <FaUser className="mr-2" />
-                Login now
-              </button>
-              <button
-                className="bg-green-400 font-medium inline-flex items-center px-3 py-1 rounded-md shadow-md text-white transition hover:bg-green-500"
-                type="submit"
-                onClick={handleGoogle}
-              >
-                <FcGoogle className="mr-2" />
-                Sing in With Google
+                Register
               </button>
             </form>
             {/* Links */}
             <div className="flex flex-col items-center">
-              <p className="italic">
-                Join us now.
-                <Link href="/register" className="ml-1 text-green-500 hover:underline">
-                  Register here
-                </Link>
-              </p>
-              <p className="italic">
-                Lost your password?
-                <Link className="ml-1 text-green-500 hover:underline" href="/">
-                  Reset password
-                </Link>
-              </p>
+              <Link
+                href="/login"
+                className="ml-1 text-green-500 hover:underline"
+              >
+                Go Login
+              </Link>
             </div>
           </div>
         </div>
